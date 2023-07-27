@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fc5601a4-d882-480f-ba3a-997e5dd341eb" name="変更" comment="2回目　急行カード作成中">
+    <list default="true" id="fc5601a4-d882-480f-ba3a-997e5dd341eb" name="変更" comment="3回目　急行カード追記中。次は進むコマンドと、マップ作成。">
+      <change afterPath="$PROJECT_DIR$/src/main/java/main/Command.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/main/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Dice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/Dice.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/card/Kyuko.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/card/Kyuko.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -116,7 +119,15 @@
       <option name="project" value="LOCAL" />
       <updated>1689913908740</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="3回目　急行カード追記中。次は進むコマンドと、マップ作成。">
+      <option name="closed" value="true" />
+      <created>1689996378709</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1689996378709</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -146,6 +157,7 @@
     <MESSAGE value="サイコロの更新1回目" />
     <MESSAGE value="1回目" />
     <MESSAGE value="2回目　急行カード作成中" />
-    <option name="LAST_COMMIT_MESSAGE" value="2回目　急行カード作成中" />
+    <MESSAGE value="3回目　急行カード追記中。次は進むコマンドと、マップ作成。" />
+    <option name="LAST_COMMIT_MESSAGE" value="3回目　急行カード追記中。次は進むコマンドと、マップ作成。" />
   </component>
 </project>
