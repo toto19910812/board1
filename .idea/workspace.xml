@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fc5601a4-d882-480f-ba3a-997e5dd341eb" name="変更" comment="４回目　急行カード完成。マップを移動できる仕組みを作る。">
-      <change afterPath="$PROJECT_DIR$/src/main/java/map/Plus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="fc5601a4-d882-480f-ba3a-997e5dd341eb" name="変更" comment="４回目　急行カード完成。マップを移動できる仕組みを作る。" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,7 +56,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "event",
+    "git-widget-placeholder": "main",
     "project.structure.last.edited": "アーティファクト",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
