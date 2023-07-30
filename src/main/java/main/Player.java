@@ -3,12 +3,17 @@ package main;
 import java.util.Scanner;
 
 public class Player {
-    private int money;
+    private long money;
+    private String name;
+    private String directer;
+    private int positionR;
+    private int positionC;
 
-    public int getMoney() {
+
+    public long getMoney() {
         return money;
     }
-    public void setMoney(int money) {
+    public void setMoney(long money) {
         this.money = money;
     }
 
@@ -21,8 +26,20 @@ public class Player {
             System.out.println("どちらへ向かいますか？1:↑　2:↓　3:←　4:→　5:もどる");
             direction = sc.nextInt();
             switch (direction){
-//                case
-                //次回、選んだ方向と挙動を作成する。
+                case 1:
+
+                    direction--;
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                default:
+                    System.out.println("エラー");
             }
         }
     }
