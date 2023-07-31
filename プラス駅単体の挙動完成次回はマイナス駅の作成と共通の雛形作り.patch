@@ -1,0 +1,192 @@
+From f1d31f0306e2bd25bf5fc6205712f1f4463f9836 Mon, 31 Jul 2023 13:23:27 +0900
+From: to.to081244 <kohei@localhost>
+Date: Mon, 31 Jul 2023 13:22:23 +0900
+Subject: [PATCH] プラス駅単体の挙動完成。次回はマイナス駅の作成と、共通の雛形作り。
+
+diff --git a/src/main/java/main/Main.java b/src/main/java/main/Main.java
+index 95a4ff1..defb647 100644
+--- a/src/main/java/main/Main.java
++++ b/src/main/java/main/Main.java
+@@ -1,18 +1,13 @@
+ package main;
+ 
+-import map.Creater;
++import map.Plus;
+ 
+ public class Main {
+     public static void main(String[] args){
+         Player pc = new Player();
+-        Creater.create_test();
+-
+-//        プレイヤーの１行動をメインメソッドに一度再現してから、Commandクラスに切り離す
+-        System.out.println("ももたろ社長、高知へ向かいましょう！");
+-        pc.Saikoro();
+-
+-
+-
++        Plus plus = new Plus();
++        pc.setName("ももたろ");
++        plus.startEvent(pc);
+ 
+     }
+ }
+diff --git a/src/main/java/main/Player.java b/src/main/java/main/Player.java
+index 9c55dbd..b416adf 100644
+--- a/src/main/java/main/Player.java
++++ b/src/main/java/main/Player.java
+@@ -9,26 +9,50 @@
+     private int positionR;
+     private int positionC;
+ 
++    public Player() {
++    	this.setDirecter("社長");
++    	this.setMoney(1000);
++    }
++
+     public long getMoney() {
+-        return money;
++        return this.money;
+     }
+     public void setMoney(long money) {
+         this.money = money;
+     }
+     public int getPositionR() {
+-		return positionR;
++		return this.positionR;
+ 	}
+ 	public void setPositionR(int positionR) {
+ 		this.positionR = positionR;
+ 	}
+ 	public int getPositionC() {
+-		return positionC;
++		return this.positionC;
+ 	}
+ 	public void setPositionC(int positionC) {
+ 		this.positionC = positionC;
+ 	}
++	public String getName() {
++		return this.name;
++	}
++	public void setName(String name) {
++		this.name = name;
++	}
++	public String getDirecter() {
++		return this.directer;
++	}
++	public void setDirecter(String directer) {
++		this.directer = directer;
++	}
++	public String toString() {
++		return this.getName() + this.getDirecter();
++	}
++	public String toStringAndMoney() {
++		return this.toString() + "の持ち金　" + this.getMoney() + "万円";
++	}
+ 	//以下コマンド
+     public void Saikoro(){
++
+     	//戻るはのちに実装したい
+         int value = Command.useDice();
+         while(value ==0){
+diff --git a/src/main/java/map/ColorStation.java b/src/main/java/map/ColorStation.java
+new file mode 100644
+index 0000000..4d6a0b3
+--- /dev/null
++++ b/src/main/java/map/ColorStation.java
+@@ -0,0 +1,15 @@
++package map;
++
++import main.Player;
++
++//プラス、マイナス駅での挙動。計算以外の雛形をここに書く。
++public class ColorStation extends Station{
++
++	public void startEvent(Player pc) {
++
++		//次ベント初動と終了時の処理を書く。
++
++
++	}
++
++}
+diff --git a/src/main/java/map/Plus.java b/src/main/java/map/Plus.java
+index 2f973d8..52d639a 100644
+--- a/src/main/java/map/Plus.java
++++ b/src/main/java/map/Plus.java
+@@ -1,12 +1,30 @@
+ package map;
+ 
+-public abstract class Plus extends Station {
++import main.Player;
+ 
+-    @Override
+-    public long event() {
++public class Plus extends Station {
++
++	public Plus() {
++		this.setName("プラス");
++	}
++
++	public String toString() {
++		return this.getName() + "の駅";
++	}
++
++    public void startEvent(Player pc) {
+     	long value;
+-    	System.out.println("");
+-        return 0;
++    	System.out.println(this.toString() + "に止まった！");
++    	System.out.println(pc.toString() + "!");
++    	System.out.println(pc.toString() + "グループの今月の成績を報告してください！");
++    	value = ((long)(Math.random()*100) + 1) *10;
++    	System.out.println(this.getName() + value + "万円");
++    	pc.setMoney(pc.getMoney() + value);
++    	System.out.println(pc.toStringAndMoney());
++    }
++
++    public long culc() {//プラス駅での計算処理
++    	return ((long)(Math.random()*100) + 1) *10;
+     }
+ }
+ 
+diff --git a/src/main/java/map/Station.java b/src/main/java/map/Station.java
+index c231adb..a126619 100644
+--- a/src/main/java/map/Station.java
++++ b/src/main/java/map/Station.java
+@@ -1,24 +1,32 @@
+ package map;
+ 
++import main.Player;
++
+ public abstract class Station {
+     private int positionR;
+     private int positionC;
++    private String name;
++
++
+ 
+     public int getPositionC() {
+         return positionC;
+     }
+-
+     public int getPositionR() {
+         return positionR;
+     }
+-
+     public void setPositionC(int positionC) {
+         this.positionC = positionC;
+     }
+-
+     public void setPositionR(int positionR) {
+         this.positionR = positionR;
+     }
++    public String getName() {
++		return this.name;
++	}
++	public void setName(String name) {
++		this.name = name;
++	}
+ 
+-    public abstract long event();
++	public abstract void startEvent(Player pc);
+ }
