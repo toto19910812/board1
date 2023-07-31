@@ -1,0 +1,107 @@
+From 41d45d63db7f2301197e49aa5b26cf245cffbc72 Mon, 31 Jul 2023 09:54:42 +0900
+From: to.to081244 <kohei@localhost>
+Date: Mon, 31 Jul 2023 09:47:10 +0900
+Subject: [PATCH] 7回目　次はプラス駅などの作成
+
+diff --git a/src/main/java/card/Kyuko.java b/src/main/java/card/Kyuko.java
+index 6327123..0aacb40 100644
+--- a/src/main/java/card/Kyuko.java
++++ b/src/main/java/card/Kyuko.java
+@@ -1,5 +1,4 @@
+ package card;
+-import java.util.ArrayList;
+ import main.Command;
+ public abstract class Kyuko {
+     private int number;//サイコロの個数
+diff --git a/src/main/java/main/Main.java b/src/main/java/main/Main.java
+index 87c5dd4..95a4ff1 100644
+--- a/src/main/java/main/Main.java
++++ b/src/main/java/main/Main.java
+@@ -8,7 +8,7 @@
+         Creater.create_test();
+ 
+ //        プレイヤーの１行動をメインメソッドに一度再現してから、Commandクラスに切り離す
+-        System.out.println("ももたろ社長、おじかんです！");
++        System.out.println("ももたろ社長、高知へ向かいましょう！");
+         pc.Saikoro();
+ 
+ 
+diff --git a/src/main/java/main/Player.java b/src/main/java/main/Player.java
+index 13571ad..9c55dbd 100644
+--- a/src/main/java/main/Player.java
++++ b/src/main/java/main/Player.java
+@@ -9,34 +9,50 @@
+     private int positionR;
+     private int positionC;
+ 
+-
+     public long getMoney() {
+         return money;
+     }
+     public void setMoney(long money) {
+         this.money = money;
+     }
+-
+-    //以下コマンド
++    public int getPositionR() {
++		return positionR;
++	}
++	public void setPositionR(int positionR) {
++		this.positionR = positionR;
++	}
++	public int getPositionC() {
++		return positionC;
++	}
++	public void setPositionC(int positionC) {
++		this.positionC = positionC;
++	}
++	//以下コマンド
+     public void Saikoro(){
++    	//戻るはのちに実装したい
+         int value = Command.useDice();
+         while(value ==0){
+             int direction;//選んだ方向
+             Scanner sc = new Scanner(System.in);
+-            System.out.println("どちらへ向かいますか？1:↑　2:↓　3:←　4:→　5:もどる");
++            System.out.println("残り" + value + "マス");
++            System.out.println("どちらへ向かいますか？1:↑　2:↓　3:←　4:→");
+             direction = sc.nextInt();
+             switch (direction){
+-                case 1:
+-
++                case 1://上
++                	this.setPositionC(this.getPositionC() - 1);
+                     direction--;
+                     break;
+-                case 2:
++                case 2://下
++                	this.setPositionC(this.getPositionC() + 1);
++                    direction--;
+                     break;
+-                case 3:
+-                    break;
++                case 3://左
++                	this.setPositionR(this.getPositionR() - 1);
++                    direction--;
++                    break;//右
+                 case 4:
+-                    break;
+-                case 5:
++                	this.setPositionR(this.getPositionR() + 1);
++                    direction--;
+                     break;
+                 default:
+                     System.out.println("エラー");
+diff --git a/src/main/java/map/Plus.java b/src/main/java/map/Plus.java
+index b5f5c55..2f973d8 100644
+--- a/src/main/java/map/Plus.java
++++ b/src/main/java/map/Plus.java
+@@ -4,6 +4,8 @@
+ 
+     @Override
+     public long event() {
++    	long value;
++    	System.out.println("");
+         return 0;
+     }
+ }
