@@ -1,0 +1,291 @@
+From d7da5b5290448b25b956d0f2124c05ba55078667 Tue, 1 Aug 2023 12:37:34 +0900
+From: to.to081244 <kohei@localhost>
+Date: Tue, 1 Aug 2023 12:35:10 +0900
+Subject: [PATCH] 青赤マス完成。次はデビルカードと特急カード。
+
+diff --git a/src/main/java/card/Card.java b/src/main/java/card/Card.java
+new file mode 100644
+index 0000000..6669861
+--- /dev/null
++++ b/src/main/java/card/Card.java
+@@ -0,0 +1,18 @@
++package card;
++
++import main.Player;
++
++public abstract class Card {
++
++	public abstract int use(Player pc);
++	public abstract String explain();
++
++
++	//捨てるコマンド。ほぼtrue。戻り値trueなら捨てられる。
++	//デビルカードのように、一部はオーバーライドする。
++	public boolean dispose() {
++		return true;
++	}
++
++
++}
+diff --git a/src/main/java/card/Kyuko.java b/src/main/java/card/Kyuko.java
+index 0aacb40..ca6d71f 100644
+--- a/src/main/java/card/Kyuko.java
++++ b/src/main/java/card/Kyuko.java
+@@ -1,16 +1,13 @@
+ package card;
+-import main.Command;
+-public abstract class Kyuko {
+-    private int number;//サイコロの個数
++
++public class Kyuko extends KyukoOrigin {
+     public Kyuko() {
+-        this.number = 2;
++        this.setNumber(2);
+     }
+-    public int use(){
+-        int total=0;//合計値を格納する変数
+-        for(int i = 0; i < number; i++){//カードによるサイコロの個数分繰り返す
+-            total += Command.useDice();
+-        }
+-        return total;//合計値を戻り値にする
++
++    public String explain() {
++    	String s = "このカードを使うと、サイコロを２個振って進むことができます！";
++    	return s;
+     }
+ 
+ }
+diff --git a/src/main/java/card/KyukoOrigin.java b/src/main/java/card/KyukoOrigin.java
+new file mode 100644
+index 0000000..b3070d9
+--- /dev/null
++++ b/src/main/java/card/KyukoOrigin.java
+@@ -0,0 +1,28 @@
++package card;
++
++import main.Dice;
++import main.Player;
++
++public abstract class KyukoOrigin extends Card{
++
++	private int number;//サイコロの個数
++
++	public int getNumber() {
++		return this.number;
++	}
++	public void setNumber(int number) {
++		this.number = number;
++	}
++
++	public int use(Player pc){
++        int total=0;//合計値を格納する変数
++        Dice dice = new Dice();
++        for(int i = 0; i < getNumber(); i++){//カードによるサイコロの個数分繰り返す
++        	dice.use();
++            total += dice.getValue();
++        }
++        return total;//合計値を戻り値にする
++    }
++
++
++}
+diff --git a/src/main/java/main/Command.java b/src/main/java/main/Command.java
+deleted file mode 100644
+index eaa244b..0000000
+--- a/src/main/java/main/Command.java
++++ /dev/null
+@@ -1,12 +0,0 @@
+-package main;
+-
+-public class Command {
+-//    行動をおいておくクラス
+-//    プレイヤーだけでなく、イベントやNPCが使い回すことも考慮し、コマンドクラスとした。
+-    public static int useDice(){
+-        //サイコロをふるメソッド。サイコロをnewし、出目を出してその目を返す。
+-        Dice dice = new Dice();
+-        dice.use();
+-        return dice.getValue();
+-    }
+-}
+diff --git a/src/main/java/main/Dice.java b/src/main/java/main/Dice.java
+index 9e664f6..c03b2d2 100644
+--- a/src/main/java/main/Dice.java
++++ b/src/main/java/main/Dice.java
+@@ -14,4 +14,8 @@
+         this.setValue(i);
+     }
+ 
++   public static Dice instance() {
++	   return new Dice();
++   }
++
+ }
+diff --git a/src/main/java/main/Main.java b/src/main/java/main/Main.java
+index defb647..2440db8 100644
+--- a/src/main/java/main/Main.java
++++ b/src/main/java/main/Main.java
+@@ -1,13 +1,14 @@
+ package main;
+-
+-import map.Plus;
++import map.ColorStation;
++import map.Minus;
+ 
+ public class Main {
+     public static void main(String[] args){
+         Player pc = new Player();
+-        Plus plus = new Plus();
++        ColorStation minus = new Minus();
+         pc.setName("ももたろ");
+-        plus.startEvent(pc);
++        pc.setMoney(1000);
++        minus.event(pc);
+ 
+     }
+ }
+diff --git a/src/main/java/main/Player.java b/src/main/java/main/Player.java
+index b416adf..db96e12 100644
+--- a/src/main/java/main/Player.java
++++ b/src/main/java/main/Player.java
+@@ -9,6 +9,7 @@
+     private int positionR;
+     private int positionC;
+ 
++
+     public Player() {
+     	this.setDirecter("社長");
+     	this.setMoney(1000);
+@@ -52,10 +53,16 @@
+ 	}
+ 	//以下コマンド
+     public void Saikoro(){
++    	Dice dice = new Dice();
++    	dice.use();
++        int value = dice.getValue();
++        this.go(value);
++    }
+ 
+-    	//戻るはのちに実装したい
+-        int value = Command.useDice();
+-        while(value ==0){
++//    サイコロやカードなどで目が決まった後の挙動。
++//    デビルカード、エンジェルカードの処理もこのメソッドで行う。
++    void go(int value) {
++    	while(value ==0){
+             int direction;//選んだ方向
+             Scanner sc = new Scanner(System.in);
+             System.out.println("残り" + value + "マス");
+@@ -82,6 +89,7 @@
+                     System.out.println("エラー");
+             }
+         }
++
+     }
+ 
+ }
+diff --git a/src/main/java/map/ColorStation.java b/src/main/java/map/ColorStation.java
+index 4d6a0b3..6de493a 100644
+--- a/src/main/java/map/ColorStation.java
++++ b/src/main/java/map/ColorStation.java
+@@ -2,14 +2,25 @@
+ 
+ import main.Player;
+ 
+-//プラス、マイナス駅での挙動。計算以外の雛形をここに書く。
+-public class ColorStation extends Station{
++public abstract class ColorStation extends Station {
+ 
+-	public void startEvent(Player pc) {
+-
+-		//次ベント初動と終了時の処理を書く。
+-
+-
++	public String toString() {
++		return this.getName() + "の駅";
+ 	}
+-
++    public void event(Player pc) {
++    	long value;
++    	System.out.println(this.toString() + "に止まった！");
++    	System.out.println(pc.toString() + "!");
++    	System.out.println(pc.toString() + "グループの今月の成績を報告してください！");
++    	value = culc();
++    	System.out.println(this.getName() + value + "万円");
++    	pc.setMoney(pc.getMoney() + value);
++    	System.out.println(pc.toStringAndMoney());
++    }
++//    ベースの計算式。実装するプラスとマイナスは、この計算式に加え、季節補正を追加する。年数補正はいずれここに。
++    long culc() {
++//    	10〜1000を返す。補正によっては大きくなる可能性も踏まえ、longにする。
++    	return ((long)(Math.random()*100) + 1) *10;
++    }
+ }
++
+diff --git a/src/main/java/map/Minus.java b/src/main/java/map/Minus.java
+new file mode 100644
+index 0000000..20fa3aa
+--- /dev/null
++++ b/src/main/java/map/Minus.java
+@@ -0,0 +1,14 @@
++package map;
++
++
++public class Minus extends ColorStation {
++
++	public Minus() {
++		this.setName("マイナス");
++	}
++	long culc() {
++		long minusValue = -(super.culc());
++		return minusValue;
++	}
++
++}
+diff --git a/src/main/java/map/Plus.java b/src/main/java/map/Plus.java
+index 52d639a..d015cc2 100644
+--- a/src/main/java/map/Plus.java
++++ b/src/main/java/map/Plus.java
+@@ -1,30 +1,10 @@
+ package map;
+ 
+-import main.Player;
+-
+-public class Plus extends Station {
++public class Plus extends ColorStation{
+ 
+ 	public Plus() {
+ 		this.setName("プラス");
+ 	}
+ 
+-	public String toString() {
+-		return this.getName() + "の駅";
+-	}
+-
+-    public void startEvent(Player pc) {
+-    	long value;
+-    	System.out.println(this.toString() + "に止まった！");
+-    	System.out.println(pc.toString() + "!");
+-    	System.out.println(pc.toString() + "グループの今月の成績を報告してください！");
+-    	value = ((long)(Math.random()*100) + 1) *10;
+-    	System.out.println(this.getName() + value + "万円");
+-    	pc.setMoney(pc.getMoney() + value);
+-    	System.out.println(pc.toStringAndMoney());
+-    }
+-
+-    public long culc() {//プラス駅での計算処理
+-    	return ((long)(Math.random()*100) + 1) *10;
+-    }
++//	いずれ、culcをオーバーライドする。まず季節補正を決め、そこから親のメソッドを使う。
+ }
+-
+diff --git a/src/main/java/map/Station.java b/src/main/java/map/Station.java
+index a126619..ef11d44 100644
+--- a/src/main/java/map/Station.java
++++ b/src/main/java/map/Station.java
+@@ -28,5 +28,5 @@
+ 		this.name = name;
+ 	}
+ 
+-	public abstract void startEvent(Player pc);
++	public abstract void event(Player pc);
+ }
